@@ -17,6 +17,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <filesystem>
 
 #include "boost/lexical_cast.hpp"
 
@@ -32,7 +33,7 @@
 class SystemClass
 {
 public:
-    SystemClass();
+    SystemClass(std::filesystem::path app_path);
     SystemClass(const SystemClass&);
     ~SystemClass();
 
@@ -55,6 +56,8 @@ private:
     void DrawGUI();
 
 private:
+    std::filesystem::path m_app_path;
+
     LPCWSTR m_applicationName;
     HINSTANCE m_hinstance;
     HWND m_hwnd;

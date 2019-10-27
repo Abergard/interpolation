@@ -7,7 +7,7 @@
 
 #include <windows.h>
 
-GraphicsClass::GraphicsClass()
+GraphicsClass::GraphicsClass(std::filesystem::path app_path) : m_app_path{app_path}
 {
     m_D3D = 0;
     m_Camera = 0;
@@ -71,10 +71,8 @@ bool GraphicsClass::Initialize(int screenWidth,
     result = m_Points->Initialize(m_D3D->GetDevice());
     if (!result)
     {
-        MessageBox(hwnd,
-                   "Could not initialize the m_Points object.",
-                   "Error",
-                   MB_OK);
+        MessageBox(
+            hwnd, "Could not initialize the m_Points object.", "Error", MB_OK);
         return false;
     }
 
@@ -89,10 +87,8 @@ bool GraphicsClass::Initialize(int screenWidth,
     result = m_Field->Initialize(m_D3D->GetDevice());
     if (!result)
     {
-        MessageBox(hwnd,
-                   "Could not initialize the m_Field object.",
-                   "Error",
-                   MB_OK);
+        MessageBox(
+            hwnd, "Could not initialize the m_Field object.", "Error", MB_OK);
         return false;
     }
 
@@ -113,7 +109,7 @@ bool GraphicsClass::Initialize(int screenWidth,
     }
 
     // Create the color shader object.
-    m_ColorShader = new ColorShaderClass;
+    m_ColorShader = new ColorShaderClass{m_app_path};
     if (!m_ColorShader)
     {
         return false;

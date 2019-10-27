@@ -7,6 +7,9 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
+
+#include <filesystem>
+
 #include "cameraclass.h"
 #include "colorshaderclass.h"
 #include "d3dclass.h"
@@ -29,7 +32,7 @@ const float SCREEN_NEAR = 0.1f;
 class GraphicsClass
 {
 public:
-    GraphicsClass();
+    GraphicsClass(std::filesystem::path app_path);
     GraphicsClass(const GraphicsClass&);
     ~GraphicsClass();
 
@@ -45,6 +48,8 @@ private:
     bool Render();
 
 private:
+    std::filesystem::path m_app_path;
+
     D3DClass* m_D3D;
     CameraClass* m_Camera;
     FieldClass* m_Field;

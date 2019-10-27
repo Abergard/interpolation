@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "systemclass.h"
 
-SystemClass::SystemClass()
+SystemClass::SystemClass(std::filesystem::path app_path) : m_app_path{app_path}
 {
     m_Input = 0;
     m_Graphics = 0;
@@ -45,7 +45,7 @@ bool SystemClass::Initialize()
 
     // Create the graphics object.  This object will handle rendering all the
     // graphics for this application.
-    m_Graphics = new GraphicsClass;
+    m_Graphics = new GraphicsClass(m_app_path);
     if (!m_Graphics)
     {
         return false;
@@ -303,76 +303,24 @@ void SystemClass::DrawGUI()
     int leftBorder = 810;
 
     CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"Size:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder,
-                   50,
-                   80,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
+                    L"STATIC",
+                    L"Size:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder,
+                    50,
+                    80,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
 
     m_hsize = CreateWindowExW(NULL,
-                             L"EDIT",
-                             L"200",
-                             WS_CHILD | WS_VISIBLE,
-                             leftBorder + 40,
-                             50,
-                             80,
-                             20,
-                             m_hwnd,
-                             NULL,
-                             m_hinstance,
-                             NULL);
-
-    CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"Start Point:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder,
-                   20,
-                   100,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
-
-    m_hleft = CreateWindowExW(NULL,
-                             L"EDIT",
-                             L"-6",
-                             WS_CHILD | WS_VISIBLE,
-                             leftBorder + 80,
-                             20,
-                             60,
-                             20,
-                             m_hwnd,
-                             NULL,
-                             m_hinstance,
-                             NULL);
-
-    CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"End Point:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder + 150,
-                   20,
-                   80,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
-
-    m_hright = CreateWindowExW(NULL,
                               L"EDIT",
-                              L"6",
+                              L"200",
                               WS_CHILD | WS_VISIBLE,
-                              leftBorder + 220,
-                              20,
+                              leftBorder + 40,
+                              50,
                               80,
                               20,
                               m_hwnd,
@@ -380,135 +328,188 @@ void SystemClass::DrawGUI()
                               m_hinstance,
                               NULL);
 
-    m_hbutton = CreateWindowExW(NULL,
-                               L"BUTTON",
-                               L"GENERATE",
+    CreateWindowExW(NULL,
+                    L"STATIC",
+                    L"Start Point:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder,
+                    20,
+                    100,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
+
+    m_hleft = CreateWindowExW(NULL,
+                              L"EDIT",
+                              L"-6",
+                              WS_CHILD | WS_VISIBLE,
+                              leftBorder + 80,
+                              20,
+                              60,
+                              20,
+                              m_hwnd,
+                              NULL,
+                              m_hinstance,
+                              NULL);
+
+    CreateWindowExW(NULL,
+                    L"STATIC",
+                    L"End Point:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder + 150,
+                    20,
+                    80,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
+
+    m_hright = CreateWindowExW(NULL,
+                               L"EDIT",
+                               L"6",
                                WS_CHILD | WS_VISIBLE,
-                               leftBorder,
-                               80,
+                               leftBorder + 220,
+                               20,
                                80,
                                20,
                                m_hwnd,
-                               (HMENU)502,
+                               NULL,
                                m_hinstance,
                                NULL);
 
-    CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"x:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder,
-                   120,
-                   20,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
-
-    m_hx = CreateWindowExW(NULL,
-                          L"EDIT",
-                          L"0",
-                          WS_CHILD | WS_VISIBLE,
-                          leftBorder + 20,
-                          120,
-                          40,
-                          20,
-                          m_hwnd,
-                          NULL,
-                          m_hinstance,
-                          NULL);
-
-    CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"y:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder + 80,
-                   120,
-                   20,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
-
-    m_hy = CreateWindowExW(NULL,
-                          L"EDIT",
-                          L"0",
-                          WS_CHILD | WS_VISIBLE,
-                          leftBorder + 100,
-                          120,
-                          40,
-                          20,
-                          m_hwnd,
-                          NULL,
-                          m_hinstance,
-                          NULL);
-
-    CreateWindowExW(NULL,
-                   L"STATIC",
-                   L"!:",
-                   WS_CHILD | WS_VISIBLE,
-                   leftBorder + 160,
-                   120,
-                   20,
-                   20,
-                   m_hwnd,
-                   NULL,
-                   m_hinstance,
-                   NULL);
-
-    m_hz = CreateWindowExW(NULL,
-                          L"EDIT",
-                          L"0",
-                          WS_CHILD | WS_VISIBLE,
-                          leftBorder + 180,
-                          120,
-                          40,
-                          20,
-                          m_hwnd,
-                          NULL,
-                          m_hinstance,
-                          NULL);
-
-    m_hnewbutton = CreateWindowExW(NULL,
-                                  L"BUTTON",
-                                  L"ADD",
-                                  WS_CHILD | WS_VISIBLE,
-                                  leftBorder + 240,
-                                  120,
-                                  40,
-                                  20,
-                                  m_hwnd,
-                                  (HMENU)503,
-                                  m_hinstance,
-                                  NULL);
-
-    m_hdeletebutton = CreateWindowExW(NULL,
-                                     L"BUTTON",
-                                     L"DELETE",
-                                     WS_CHILD | WS_VISIBLE,
-                                     leftBorder + 300,
-                                     120,
-                                     80,
-                                     20,
-                                     m_hwnd,
-                                     (HMENU)504,
-                                     m_hinstance,
-                                     NULL);
-
-    m_hListBox = CreateWindowExW(WS_EX_CLIENTEDGE,
-                                L"LISTBOX",
-                                NULL,
-                                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL,
+    m_hbutton = CreateWindowExW(NULL,
+                                L"BUTTON",
+                                L"GENERATE",
+                                WS_CHILD | WS_VISIBLE,
                                 leftBorder,
-                                160,
-                                300,
-                                200,
+                                80,
+                                80,
+                                20,
                                 m_hwnd,
-                                NULL,
+                                (HMENU)502,
                                 m_hinstance,
                                 NULL);
+
+    CreateWindowExW(NULL,
+                    L"STATIC",
+                    L"x:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder,
+                    120,
+                    20,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
+
+    m_hx = CreateWindowExW(NULL,
+                           L"EDIT",
+                           L"0",
+                           WS_CHILD | WS_VISIBLE,
+                           leftBorder + 20,
+                           120,
+                           40,
+                           20,
+                           m_hwnd,
+                           NULL,
+                           m_hinstance,
+                           NULL);
+
+    CreateWindowExW(NULL,
+                    L"STATIC",
+                    L"y:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder + 80,
+                    120,
+                    20,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
+
+    m_hy = CreateWindowExW(NULL,
+                           L"EDIT",
+                           L"0",
+                           WS_CHILD | WS_VISIBLE,
+                           leftBorder + 100,
+                           120,
+                           40,
+                           20,
+                           m_hwnd,
+                           NULL,
+                           m_hinstance,
+                           NULL);
+
+    CreateWindowExW(NULL,
+                    L"STATIC",
+                    L"!:",
+                    WS_CHILD | WS_VISIBLE,
+                    leftBorder + 160,
+                    120,
+                    20,
+                    20,
+                    m_hwnd,
+                    NULL,
+                    m_hinstance,
+                    NULL);
+
+    m_hz = CreateWindowExW(NULL,
+                           L"EDIT",
+                           L"0",
+                           WS_CHILD | WS_VISIBLE,
+                           leftBorder + 180,
+                           120,
+                           40,
+                           20,
+                           m_hwnd,
+                           NULL,
+                           m_hinstance,
+                           NULL);
+
+    m_hnewbutton = CreateWindowExW(NULL,
+                                   L"BUTTON",
+                                   L"ADD",
+                                   WS_CHILD | WS_VISIBLE,
+                                   leftBorder + 240,
+                                   120,
+                                   40,
+                                   20,
+                                   m_hwnd,
+                                   (HMENU)503,
+                                   m_hinstance,
+                                   NULL);
+
+    m_hdeletebutton = CreateWindowExW(NULL,
+                                      L"BUTTON",
+                                      L"DELETE",
+                                      WS_CHILD | WS_VISIBLE,
+                                      leftBorder + 300,
+                                      120,
+                                      80,
+                                      20,
+                                      m_hwnd,
+                                      (HMENU)504,
+                                      m_hinstance,
+                                      NULL);
+
+    m_hListBox =
+        CreateWindowExW(WS_EX_CLIENTEDGE,
+                        L"LISTBOX",
+                        NULL,
+                        WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL,
+                        leftBorder,
+                        160,
+                        300,
+                        200,
+                        m_hwnd,
+                        NULL,
+                        m_hinstance,
+                        NULL);
 }
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
@@ -668,17 +669,17 @@ void SystemClass::InitializeGraphicWindows(int& screenWidth, int& screenHeight)
 
     // Create the window with the screen settings and get the handle to it.
     m_graphic_hwnd = CreateWindowExW(WS_EX_APPWINDOW,
-                                    m_applicationName,
-                                    m_applicationName,
-                                    WS_CHILD,
-                                    posX,
-                                    posY,
-                                    screenWidth,
-                                    screenHeight,
-                                    m_hwnd,
-                                    NULL,
-                                    m_hinstance,
-                                    NULL);
+                                     m_applicationName,
+                                     m_applicationName,
+                                     WS_CHILD,
+                                     posX,
+                                     posY,
+                                     screenWidth,
+                                     screenHeight,
+                                     m_hwnd,
+                                     NULL,
+                                     m_hinstance,
+                                     NULL);
 
     // Bring the window up on the screen and set it as main focus.
     ShowWindow(m_graphic_hwnd, SW_SHOW);

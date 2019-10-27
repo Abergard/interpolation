@@ -11,8 +11,8 @@
 // #include <d3dx10math.h>
 #include <DirectXMath.h>
 // #include <d3dx11async.h>
+#include <filesystem>
 #include <fstream>
-using namespace std;
 
 // MY INCLUDES
 #include "defines.h"
@@ -31,7 +31,7 @@ private:
     };
 
 public:
-    ColorShaderClass();
+    ColorShaderClass(std::filesystem::path app_path);
     ColorShaderClass(const ColorShaderClass&);
     ~ColorShaderClass();
 
@@ -44,9 +44,9 @@ public:
                 DirectX::XMMATRIX);
 
 private:
-    bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
+    bool InitializeShader(ID3D11Device*, HWND, std::wstring, std::wstring);
     void ShutdownShader();
-    void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
+    void OutputShaderErrorMessage(ID3D10Blob*, HWND, const WCHAR*);
 
     bool SetShaderParameters(ID3D11DeviceContext*,
                              DirectX::XMMATRIX,
@@ -55,6 +55,8 @@ private:
     void RenderShader(ID3D11DeviceContext*, int);
 
 private:
+    std::filesystem::path m_shader_path;
+
     ID3D11VertexShader* m_vertexShader;
     ID3D11PixelShader* m_pixelShader;
     ID3D11InputLayout* m_layout;

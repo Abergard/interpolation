@@ -5,7 +5,8 @@
 
 #include <d3dcompiler.h>
 
-ColorShaderClass::ColorShaderClass()
+ColorShaderClass::ColorShaderClass(std::filesystem::path app_path)
+    : m_shader_path{app_path / "shaders"}
 {
     m_vertexShader = 0;
     m_pixelShader = 0;
@@ -27,7 +28,7 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 
     // Initialize the vertex and pixel shaders.
     result = InitializeShader(
-        device, hwnd, L"../src/color.vs", L"../src/color.ps");
+        device, hwnd, m_shader_path / "color.vs", m_shader_path / "color.ps");
     if (!result)
     {
         return false;
@@ -68,8 +69,8 @@ bool ColorShaderClass::Render(ID3D11DeviceContext* deviceContext,
 
 bool ColorShaderClass::InitializeShader(ID3D11Device* device,
                                         HWND hwnd,
-                                        WCHAR* vsFilename,
-                                        WCHAR* psFilename)
+                                        std::wstring vsFilename,
+                                        std::wstring psFilename)
 {
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -91,7 +92,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device,
 #endif
 
     // Compile the vertex shader code.
-    result = D3DCompileFromFile(vsFilename,
+    result = D3DCompileFromFile(vsFilename.c_str(),
                                 NULL,
                                 NULL,
                                 "ColorVertexShader",
@@ -100,7 +101,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device,
                                 NULL,
                                 &vertexShaderBuffer,
                                 &errorMessage);
-    // result = D3DX11CompileFromFile(vsFilename,
+    // result = D3DX11CompileFromFile(vsFilename.c_str(),
     //                                NULL,
     //                                NULL,
     //                                "ColorVertexShader",
@@ -117,13 +118,13 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device,
         // the error message.
         if (errorMessage)
         {
-            OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
+            OutputShaderErrorMessage(errorMessage, hwnd, vsFilename.c_str());
         }
         // If there was  nothing in the error message then it simply could not
         // find the shader file itself.
         else
         {
-            MessageBoxW(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+            MessageBoxW(hwnd, vsFilename.c_str(), L"Missing Shader File", MB_OK);
         }
 
         return false;
@@ -136,7 +137,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device,
 #endif
 
     // Compile the pixel shader code.
-    result = D3DCompileFromFile(psFilename,
+    result = D3DCompileFromFile(psFilename.c_str(),
                                 NULL,
                                 NULL,
                                 "ColorPixelShader",
@@ -163,13 +164,13 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device,
         // the error message.
         if (errorMessage)
         {
-            OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
+            OutputShaderErrorMessage(errorMessage, hwnd, psFilename.c_str());
         }
         // If there was nothing in the error message then it simply could not
         // find the file itself.
         else
         {
-            MessageBoxW(hwnd, psFilename, L"Missing Shader File", MB_OK);
+            MessageBoxW(hwnd, psFilename.c_str(), L"Missing Shader File", MB_OK);
         }
 
         return false;
@@ -291,11 +292,11 @@ void ColorShaderClass::ShutdownShader()
 
 void ColorShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage,
                                                 HWND hwnd,
-                                                WCHAR* shaderFilename)
+                                                const WCHAR* shaderFilename)
 {
     char* compileErrors;
     unsigned long bufferSize, i;
-    ofstream fout;
+    std::ofstream fout;
 
     // Get a pointer to the error message text buffer.
     compileErrors = (char*)(errorMessage->GetBufferPointer());

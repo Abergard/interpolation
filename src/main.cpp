@@ -5,34 +5,25 @@
 
 #include <windows.h>
 
+#include <filesystem>
+#include <iostream>
+
 #include "systemclass.h"
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   PSTR pScmdline,
-                   int iCmdshow)
+// int WINAPI WinMain(HINSTANCE hInstance,
+//                    HINSTANCE hPrevInstance,
+//                    PSTR pScmdline,
+//                    int iCmdshow)
+int main(int, char* argv[])
 {
-    SystemClass* System;
-    bool result;
+    auto app_path = std::filesystem::path{argv[0]}.parent_path();
+    auto shaders_path = app_path / "shaders";
 
-    // Create the system object.
-    System = new SystemClass;
-    if (!System)
+    SystemClass system{app_path};
+    if (auto result = system.Initialize())
     {
-        return 0;
+        system.Run();
     }
 
-    // Initialize and run the system object.
-    result = System->Initialize();
-    if (result)
-    {
-        System->Run();
-    }
-
-    // Shutdown and release the system object.
-    System->Shutdown();
-    delete System;
-    System = 0;
-
-    return 0;
+    system.Shutdown();
 }
